@@ -1,0 +1,4 @@
+#ifndef ONLINEPLOTS_H
+#define ONLINEPLOTS_H
+
+#endif // ONLINEPLOTS_H
