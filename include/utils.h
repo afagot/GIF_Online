@@ -19,10 +19,14 @@
 
 using namespace std;
 
+//***************************** ENV. VARIABLES
+
 const string __dimensions = "Dimensions/Dimensions_20160526-2016XXXX.ini";
 //const string __dimensions = "Dimensions/Dimensions_20150928-20160512.ini";
 const string __logpath = "/var/operation/RUN/log";
 //const string __logpath = "log";
+
+//***************************** USEFUL FUNCTIONS
 
 int     CharToInt(char& C);
 string  CharToString(char& C);
@@ -31,12 +35,26 @@ string  longTostring(long value);
 string  floatTostring(float value);
 string  GetLogTimeStamp();
 
+//***************************** STRUCTURES FOR GIF INFRASTRUCTURE
+//The RPC structure is more complexe than the one that can be found
+//in the GIF_OfflineAnalysis code cause we need to register the rate,
+//current and efficiency values for a complete scan. Thus it is needed
+//to add some more vectors to get this data in a dynamical way
+
 //Infrastructure inside GIF++
 struct RPC{
-    string        name;
-    unsigned int  nPartitions;
-    unsigned int  strips;
-    vector<float> stripGeo;
+    string          name;
+    unsigned int    nPartitions;
+    unsigned int    nGaps;
+    vector<string>  gapNames;
+
+    vector< vector<float> > HVeff;
+    vector< vector<float> > Rates;
+    vector< vector<float> > RatesErr;
+    vector< vector<float> > Imon;
+    vector< vector<float> > ImonErr;
+    vector< vector<float> > Eff;
+    vector< vector<float> > EffErr;
 };
 
 void SetRPC(RPC& rpc, string ID, IniFile* geofile);
@@ -56,15 +74,5 @@ struct Infrastructure {
 };
 
 void SetInfrastructure(Infrastructure& infra, IniFile* geofile);
-
-//Data in the root file
-struct RAWData {
-    int             iEvent;     //Event i
-    int             TDCNHits;   //Number of hits in event i
-    vector<int>    *TDCCh;      //List of channels giving hits per event
-    vector<float>  *TDCTS;      //List of the corresponding time stamps
-};
-
-void SetIDName(string rpcID, unsigned int partition, char* ID, char* Name, string IDroot, string Nameroot);
 
 #endif // UTILS_H

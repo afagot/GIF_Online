@@ -25,7 +25,7 @@ online: 			main.o OnlinePlots.o utils.o IniFile.o MsgSvc.o
 					$(DAQ_OBJ_DIR)/utils.o \
 					$(DAQ_OBJ_DIR)/IniFile.o \
 					$(DAQ_OBJ_DIR)/MsgSvc.o \
-        			-o $(DAQ_BIN_DIR)/offlineanalysis \
+        			-o $(DAQ_BIN_DIR)/onlineanalysis \
         			$(LFLAGS) \
         		 	-l curses
 

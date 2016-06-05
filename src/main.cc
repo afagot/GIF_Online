@@ -1,5 +1,6 @@
 #include "../include/OnlinePlots.h"
 #include "../include/MsgSvc.h"
+#include "../include/utils.h"
 
 #include <sstream>
 
@@ -13,14 +14,19 @@ int main(int argc ,char *argv[]){
     converter >> program;
     converter.clear();
 
-    if(argc != 2){
-        MSG_WARNING("[OnlinePlots]: USAGE is :" + program + " RateSummaryFile");
+    if(argc != 1){
+        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis");
         return -1;
     } else {
-        converter << argv[1];
-        string resultsfile;
-        converter >> resultsfile;
-        converter.clear();
+        //First construct the GIF++ infrastructure with its
+        //trolleys and RPCs
+
+        //Get the chambers geometry
+        IniFile* Dimensions = new IniFile(__dimensions.c_str());
+        Dimensions->Read();
+
+        Infrastructure GIF;
+        SetInfrastructure(GIF,Dimensions);
 
         return 0;
     }

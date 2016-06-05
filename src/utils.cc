@@ -94,22 +94,26 @@ string GetLogTimeStamp(){
 void SetRPC(RPC &rpc, string ID, IniFile *geofile){
     rpc.name        = geofile->stringType(ID,"Name","");
     rpc.nPartitions = geofile->intType(ID,"Partitions",NPARTITIONS);
-    rpc.strips      = geofile->intType(ID,"Strips",NSLOTS);
+    rpc.nGaps       = geofile->intType(ID,"Gaps",0);
 
-    string partID = "ABCD";
+    for(unsigned int g = 0; g < rpc.nGaps; g++){
+        string gapID = "Gap" + intTostring(g+1);
+        string gapType = geofile->stringType(ID,gapID,"empty");
 
-    for(unsigned int p = 0; p < rpc.nPartitions; p++){
-        string minorID  = "Minor-"  + CharToString(partID[p]);
-        string majorID  = "Major-"  + CharToString(partID[p]);
-        string heightID = "Height-" + CharToString(partID[p]);
+        string tmpgapname;
+        if(gapType == "empty") tmpgapname = rpc.name;
+        else tmpgapname = rpc.name + "-" + gapType;
 
-        float minor  = geofile->floatType(ID,minorID,1.);
-        float major  = geofile->floatType(ID,majorID,1.);
-        float height = geofile->floatType(ID,heightID,1.);
-
-        float area = ((minor + major) * height)/2.;
-        rpc.stripGeo.push_back(area);
+        rpc.gapNames.push_back(tmpgapname);
     }
+
+    rpc.HVeff.clear();
+    rpc.Rates.clear();
+    rpc.RatesErr.clear();
+    rpc.Imon.clear();
+    rpc.ImonErr.clear();
+    rpc.Eff.clear();
+    rpc.EffErr.clear();
 }
 
 // ****************************************************************************************************
