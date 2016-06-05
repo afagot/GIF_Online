@@ -95,15 +95,15 @@ void MakeRatePlots(Infrastructure Infra, string fName){
                 //This, start by looping other the number of
                 //rpcs.
                 for(unsigned int r = 0; r < TotRPCs; r++){
-                    unsigned int tmphv = 0;
+                    float tmphv = 0;
                     RateFile >> tmphv;
                     Data[0][r].push_back(tmphv);
 
                     //For each rpc, loop over its number of
                     //partitions
                     for(unsigned int p = 0; p < RPCPartitions[r]; p++){
-                        unsigned int tmprate = 0;
-                        unsigned int tmperr = 0;
+                        float tmprate = 0;
+                        float tmperr = 0;
                         RateFile >> tmprate >> tmperr;
                         Data[1][pi].push_back(tmprate);
                         Data[2][pi].push_back(tmperr);
@@ -123,5 +123,18 @@ void MakeRatePlots(Infrastructure Infra, string fName){
     //Now that all the data is contained into our big vector
     //we will be able to make some plots
 
+    for(unsigned int i = 0; i < Data[0][0].size(); i++){ 
+        unsigned int pi = 0;
+        for(unsigned int r = 0; r < TotRPCs; r++){
+            cout << Data[0][r][i] << " ";
 
+            //For each rpc, loop over its number of
+            //partitions
+            for(unsigned int p = 0; p < RPCPartitions[r]; p++){
+                cout << Data[1][pi][i] << " " << Data[2][pi][i] << " ";
+                pi++;
+            }
+        }
+        cout << endl;
+    }
 }

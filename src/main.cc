@@ -14,8 +14,8 @@ int main(int argc ,char *argv[]){
     converter >> program;
     converter.clear();
 
-    if(argc != 1){
-        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis");
+    if(argc != 2){
+        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis Ratefilename");
         return -1;
     } else {
         //First construct the GIF++ infrastructure with its
@@ -28,6 +28,12 @@ int main(int argc ,char *argv[]){
         Infrastructure GIF;
         SetInfrastructure(GIF,Dimensions);
 
+        converter << argv[1];
+        string rateName;
+        converter >> rateName;
+        converter.clear();
+
+        MakeRatePlots(GIF,rateName);
         return 0;
     }
 }

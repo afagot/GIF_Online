@@ -23,8 +23,8 @@ using namespace std;
 
 const string __dimensions = "Dimensions/Dimensions_20160526-2016XXXX.ini";
 //const string __dimensions = "Dimensions/Dimensions_20150928-20160512.ini";
-const string __logpath = "/var/operation/RUN/log";
-//const string __logpath = "log";
+//const string __logpath = "/var/operation/RUN/log";
+const string __logpath = "log";
 
 //***************************** USEFUL FUNCTIONS
 
