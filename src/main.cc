@@ -15,9 +15,11 @@ int main(int argc ,char *argv[]){
     converter.clear();
 
     if(argc != 2){
-        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis Ratefilename");
+        MSG_WARNING("[OnlinePlots] USAGE is : bin/onlineanalysis Ratefilename");
         return -1;
     } else {
+        MSG_WARNING("[OnlinePlots] Update online plots");
+
         //First construct the GIF++ infrastructure with its
         //trolleys and RPCs
 
