@@ -63,6 +63,7 @@ void MakeRatePlots(Infrastructure Infra, string fName){
     Data[0].resize(TotRPCs);
     Data[1].resize(TotPartitions);
     Data[2].resize(TotPartitions);
+    Data[3].resize(TotPartitions);
 
     //To save and access to  the rates and their errors in
     //the right vector, we need to now the partition index
@@ -93,7 +94,10 @@ void MakeRatePlots(Infrastructure Infra, string fName){
                 //value for 1 rpc then to read all the rates
                 //and errors for each of its partitions.
 
-                //This, start by looping other the number of
+                //Reinitialise pi before the next line
+                pi = 0;
+
+                //Thus, start by looping other the number of
                 //rpcs.
                 for(unsigned int r = 0; r < TotRPCs; r++){
                     float tmphv = 0;
@@ -113,6 +117,7 @@ void MakeRatePlots(Infrastructure Infra, string fName){
                         pi++;
                     }
                 }
+
             }
         }
     } else {
@@ -135,28 +140,39 @@ void MakeRatePlots(Infrastructure Infra, string fName){
 
         for(unsigned int p = 0; p < RPCPartitions[r]; p++){
             string partitionID = "ABCD";
-            string title = RPCNames[r] + " Partition " + partitionID[p];
+            string Graphtitle = RPCNames[r] + " Partition " + partitionID[p];
+            string Canvastitle = "Rate-" + RPCNames[r] + "-Partition-" + partitionID[p];
 
             TGraphErrors* PartitionRatePlot = new TGraphErrors(Data[0][r].size(),&(Data[0][r][0]),&(Data[2][pi][0]),&(Data[1][r][0]),&(Data[3][pi][0]));
-            PartitionRatePlot->SetTitle(title.c_str());
+            PartitionRatePlot->SetTitle(Graphtitle.c_str());
             PartitionRatePlot->GetXaxis()->SetTitle("HV_{eff}(V)");
             PartitionRatePlot->GetYaxis()->SetTitle("Mean hit rate(Hz/cm^{2})");
             PartitionRatePlot->GetXaxis()->SetRangeUser(Data[0][r].front(),Data[0][r].back());
+            PartitionRatePlot->SetLineColor(p+2);
             PartitionRatePlot->SetMarkerColor(p+2);
-            PartitionRatePlot->SetMarkerStyle(p+22);
+            PartitionRatePlot->SetMarkerStyle(p+20);
+
+            TCanvas* cPart = new TCanvas(Canvastitle.c_str());
+            cPart->cd(0);
+            ChamberRatesPlot->Draw("ap");
+            cPart->BuildLegend();
+            cPart->Write();
 
             ChamberRatesPlot->Add(PartitionRatePlot);
-            PartitionRatePlot->Write();
             pi++;
         }
 
-        TCanvas* c1 = new TCanvas();
-        c1->cd(0);
+        string MultigraphTitle = "Mean hit rate evolution in " + RPCNames[r];
+        string MultiCanvasTitle = "Rate-" + RPCNames[r];
+
+        TCanvas* cMulti = new TCanvas(MultiCanvasTitle.c_str());
+        cMulti->cd(0);
         ChamberRatesPlot->Draw("ap");
+        ChamberRatesPlot->SetTitle(MultigraphTitle.c_str());
         ChamberRatesPlot->GetXaxis()->SetTitle("HV_{eff}(V)");
         ChamberRatesPlot->GetYaxis()->SetTitle("Mean hit rate(Hz/cm^{2})");
-        c1->BuildLegend();
-        c1->Write();
+        cMulti->BuildLegend();
+        cMulti->Write();
     }
 
     fROOT.Close();
