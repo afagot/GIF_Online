@@ -206,30 +206,36 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
     //also need to exactly know the number of RPCs and of
     //partitions
     unsigned int TotRPCs = 0;
-    unsigned int TotPartitions = 0;
-    vector<unsigned int> RPCPartitions;
-    RPCPartitions.clear();
+    unsigned int TotGaps = 0;
+    vector<unsigned int> RPCGaps;
+    RPCGaps.clear();
 
     //Make another vector to get the names of the chambers
+    //and of the gaps
     vector<string> RPCNames;
     RPCNames.clear();
+    vector<string> GapNames;
+    GapNames.clear();
 
     for(unsigned int t = 0; t < Infra.nTrolleys; t++){
         TotRPCs += Infra.Trolleys[t].nSlots;
 
         for(unsigned int s = 0; s < Infra.Trolleys[t].nSlots; s++){
-            TotPartitions += Infra.Trolleys[t].RPCs[s].nPartitions;
-            RPCPartitions.push_back(Infra.Trolleys[t].RPCs[s].nPartitions);
+            TotGaps += Infra.Trolleys[t].RPCs[s].nGaps;
+            RPCGaps.push_back(Infra.Trolleys[t].RPCs[s].nGaps);
             RPCNames.push_back(Infra.Trolleys[t].RPCs[s].name);
+
+            vector<string>::iterator it = GapNames.end();
+            GapNames.insert(it,Infra.Trolleys[t].RPCs[s].gapNames.begin(),Infra.Trolleys[t].RPCs[s].gapNames.end());
         }
     }
 
     //Resize Data vector content accordingly what we have
     //got from the infracstructure
-    Data[0].resize(TotPartitions);
-    Data[1].resize(TotPartitions);
-    Data[2].resize(TotPartitions);
-    Data[3].resize(TotPartitions);
+    Data[0].resize(TotGaps);
+    Data[1].resize(TotGaps);
+    Data[2].resize(TotGaps);
+    Data[3].resize(TotGaps);
 
     //Open in reading mode the rate file
     ifstream CurrentFile(fName.c_str(), ios::in);
@@ -257,7 +263,7 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
 
                 //Thus, start by looping other the number of
                 //rpcs.
-                for(unsigned int p = 0; p < TotPartitions; p++){
+                for(unsigned int p = 0; p < TotGaps; p++){
                     float tmphv = 0;
                     float tmpimon = 0;
                     float tmperr = 0;
@@ -287,10 +293,9 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
     for(unsigned int r = 0; r < TotRPCs; r++){
         TMultiGraph* ChamberCurrentsPlot = new TMultiGraph();
 
-        for(unsigned int p = 0; p < RPCPartitions[r]; p++){
-            string partitionID = "ABCD";
-            string Graphtitle = RPCNames[r] + " Partition " + partitionID[p];
-            string Canvastitle = "Current-" + RPCNames[r] + "-Partition-" + partitionID[p];
+        for(unsigned int p = 0; p < RPCGaps[r]; p++){
+            string Graphtitle = GapNames[pi];
+            string Canvastitle = "Current-" + GapNames[pi];
 
             TGraphErrors* PartitionCurrentPlot = new TGraphErrors(Data[0][pi].size(),&(Data[0][pi][0]),&(Data[2][pi][0]),&(Data[1][pi][0]),&(Data[3][pi][0]));
             PartitionCurrentPlot->SetTitle(Graphtitle.c_str());
