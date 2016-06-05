@@ -175,7 +175,7 @@ void MakeRatePlots(Infrastructure Infra, string fName){
         ChamberRatesPlot->SetTitle(MultigraphTitle.c_str());
         ChamberRatesPlot->GetXaxis()->SetTitle("HV_{eff}(V)");
         ChamberRatesPlot->GetYaxis()->SetTitle("Mean hit rate(Hz/cm^{2})");
-        cMulti->BuildLegend();
+        cMulti->BuildLegend(0.15,0.67,0.45,0.88);
         cMulti->Update();
         string PDF = DQMFolder + cMulti->GetName() + ".pdf";
         string PNG = DQMFolder + cMulti->GetName() + ".png";
