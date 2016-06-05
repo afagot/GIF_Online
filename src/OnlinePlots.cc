@@ -294,6 +294,10 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
         TMultiGraph* ChamberCurrentsPlot = new TMultiGraph();
 
         for(unsigned int p = 0; p < RPCGaps[r]; p++){
+            if(Data[0][pi][0] == 0){
+                pi++;
+                continue; //in case one of the gaps was OFF
+            }
             string Graphtitle = GapNames[pi];
             string Canvastitle = "Current-" + GapNames[pi];
 
@@ -326,10 +330,11 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
         TCanvas* cMulti = new TCanvas(MultiCanvasTitle.c_str());
         cMulti->cd(0);
         ChamberCurrentsPlot->Draw("ap");
+        ChamberCurrentsPlot->SetMinimum(0.);
         ChamberCurrentsPlot->SetTitle(MultigraphTitle.c_str());
         ChamberCurrentsPlot->GetXaxis()->SetTitle("HV_{eff}(V)");
         ChamberCurrentsPlot->GetYaxis()->SetTitle("Mean current (µA/cm^{2})");
-        cMulti->BuildLegend();
+        cMulti->BuildLegend(0.15,0.67,0.45,0.88);
         cMulti->Update();
         string PDF = DQMFolder + cMulti->GetName() + ".pdf";
         string PNG = DQMFolder + cMulti->GetName() + ".png";
