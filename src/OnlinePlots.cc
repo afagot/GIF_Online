@@ -165,6 +165,10 @@ void MakeRatePlots(Infrastructure Infra, string fName){
         string MultigraphTitle = "Mean hit rate evolution in " + RPCNames[r];
         string MultiCanvasTitle = "Rate-" + RPCNames[r];
 
+        string DQMFolder = fName.substr(0,fName.find_last_of("/")) + "/Online/";
+        string mkdirDQMFolder = "mkdir -p " + DQMFolder;
+        system(mkdirDQMFolder.c_str());
+
         TCanvas* cMulti = new TCanvas(MultiCanvasTitle.c_str());
         cMulti->cd(0);
         ChamberRatesPlot->Draw("ap");
@@ -172,6 +176,11 @@ void MakeRatePlots(Infrastructure Infra, string fName){
         ChamberRatesPlot->GetXaxis()->SetTitle("HV_{eff}(V)");
         ChamberRatesPlot->GetYaxis()->SetTitle("Mean hit rate(Hz/cm^{2})");
         cMulti->BuildLegend();
+        cMulti->Update();
+        string PDF = DQMFolder + cMulti->GetName() + ".pdf";
+        string PNG = DQMFolder + cMulti->GetName() + ".png";
+        cMulti->SaveAs(PDF.c_str());
+        cMulti->SaveAs(PNG.c_str());
         cMulti->Write();
     }
 
