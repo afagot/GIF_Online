@@ -136,7 +136,8 @@ void MakeRatePlots(Infrastructure Infra, string fName){
         for(unsigned int p = 0; p < RPCPartitions[r]; p++){
             string partitionID = "ABCD";
             string title = RPCNames[r] + " Partition " + partitionID[p];
-            TGraphErrors* PartitionRatePlot = new TGraphErrors(Data[0][r].size(),&(Data[0][r]),&(Data[2][pi]),&(Data[1][r]),&(Data[3][pi]));
+
+            TGraphErrors* PartitionRatePlot = new TGraphErrors(Data[0][r].size(),&(Data[0][r][0]),&(Data[2][pi][0]),&(Data[1][r][0]),&(Data[3][pi][0]));
             PartitionRatePlot->SetTitle(title.c_str());
             PartitionRatePlot->GetXaxis()->SetTitle("HV_{eff}(V)");
             PartitionRatePlot->GetYaxis()->SetTitle("Mean hit rate(Hz/cm^{2})");
