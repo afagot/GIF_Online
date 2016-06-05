@@ -14,8 +14,8 @@ int main(int argc ,char *argv[]){
     converter >> program;
     converter.clear();
 
-    if(argc != 2){
-        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis Ratefilename");
+    if(argc != 3){
+        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis /path/to/Offline-Rates.csv /path/to/Offline-Currents.csv");
         return -1;
     } else {
         //First construct the GIF++ infrastructure with its
@@ -34,6 +34,13 @@ int main(int argc ,char *argv[]){
         converter.clear();
 
         MakeRatePlots(GIF,rateName);
+
+        converter << argv[2];
+        string currentName;
+        converter >> currentName;
+        converter.clear();
+
+        MakeCurrentPlots(GIF,currentName);
         return 0;
     }
 }

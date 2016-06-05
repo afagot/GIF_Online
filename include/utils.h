@@ -36,10 +36,6 @@ string  floatTostring(float value);
 string  GetLogTimeStamp();
 
 //***************************** STRUCTURES FOR GIF INFRASTRUCTURE
-//The RPC structure is more complexe than the one that can be found
-//in the GIF_OfflineAnalysis code cause we need to register the rate,
-//current and efficiency values for a complete scan. Thus it is needed
-//to add some more vectors to get this data in a dynamical way
 
 //Infrastructure inside GIF++
 struct RPC{
@@ -47,14 +43,6 @@ struct RPC{
     unsigned int    nPartitions;
     unsigned int    nGaps;
     vector<string>  gapNames;
-
-    vector< vector<float> > HVeff;
-    vector< vector<float> > Rates;
-    vector< vector<float> > RatesErr;
-    vector< vector<float> > Imon;
-    vector< vector<float> > ImonErr;
-    vector< vector<float> > Eff;
-    vector< vector<float> > EffErr;
 };
 
 void SetRPC(RPC& rpc, string ID, IniFile* geofile);

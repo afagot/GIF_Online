@@ -106,14 +106,6 @@ void SetRPC(RPC &rpc, string ID, IniFile *geofile){
 
         rpc.gapNames.push_back(tmpgapname);
     }
-
-    rpc.HVeff.clear();
-    rpc.Rates.clear();
-    rpc.RatesErr.clear();
-    rpc.Imon.clear();
-    rpc.ImonErr.clear();
-    rpc.Eff.clear();
-    rpc.EffErr.clear();
 }
 
 // ****************************************************************************************************
