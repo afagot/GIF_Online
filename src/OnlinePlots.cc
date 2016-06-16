@@ -187,7 +187,7 @@ void MakeRatePlots(Infrastructure Infra, string fName){
     fROOT.Close();
 }
 
-//*****************************************************************************************
+// *****************************************************************************************
 
 void MakeCurrentPlots(Infrastructure Infra, string fName){
     //We need a vector of vectors of vectors... to keep
@@ -281,7 +281,6 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
     }
 
     CurrentFile.close();
-
     //Now that all the data is contained into our big vector
     //we will be able to make some plots
     string fNameROOT = fName.erase(fName.find_last_of(".")) + ".root";
@@ -294,29 +293,36 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
         TMultiGraph* ChamberCurrentsPlot = new TMultiGraph();
 
         for(unsigned int p = 0; p < RPCGaps[r]; p++){
-            if(Data[0][pi][0] == 0){
-                pi++;
-                continue; //in case one of the gaps was OFF
+            if(Data[0][pi][0] != 0){
+                string Graphtitle = GapNames[pi];
+                string Canvastitle = "Current-" + GapNames[pi];
+
+                TGraphErrors* PartitionCurrentPlot = new TGraphErrors(Data[0][pi].size(),&(Data[0][pi][0]),&(Data[2][pi][0]),&(Data[1][pi][0]),&(Data[3][pi][0]));
+                PartitionCurrentPlot->SetTitle(Graphtitle.c_str());
+                PartitionCurrentPlot->GetXaxis()->SetTitle("HV_{eff}(V)");
+                PartitionCurrentPlot->GetYaxis()->SetTitle("Mean current (#muA/cm^{2})");
+                PartitionCurrentPlot->GetXaxis()->SetRangeUser(Data[0][pi].front(),Data[0][pi].back());
+                PartitionCurrentPlot->SetLineColor(p+2);
+                PartitionCurrentPlot->SetMarkerColor(p+2);
+                PartitionCurrentPlot->SetMarkerStyle(p+20);
+
+                TCanvas* cPart = new TCanvas(Canvastitle.c_str());
+                cPart->cd(0);
+                ChamberCurrentsPlot->Draw("ap");
+                cPart->BuildLegend();
+                cPart->Write();
+
+                ChamberCurrentsPlot->Add(PartitionCurrentPlot);
+            } else {
+                string Graphtitle = GapNames[pi];
+
+                TGraphErrors* PartitionCurrentPlot = new TGraphErrors();
+                PartitionCurrentPlot->SetTitle(Graphtitle.c_str());
+                PartitionCurrentPlot->GetXaxis()->SetTitle("HV_{eff}(V)");
+                PartitionCurrentPlot->GetYaxis()->SetTitle("Mean current (#muA/cm^{2})");
+
+                ChamberCurrentsPlot->Add(PartitionCurrentPlot);
             }
-            string Graphtitle = GapNames[pi];
-            string Canvastitle = "Current-" + GapNames[pi];
-
-            TGraphErrors* PartitionCurrentPlot = new TGraphErrors(Data[0][pi].size(),&(Data[0][pi][0]),&(Data[2][pi][0]),&(Data[1][pi][0]),&(Data[3][pi][0]));
-            PartitionCurrentPlot->SetTitle(Graphtitle.c_str());
-            PartitionCurrentPlot->GetXaxis()->SetTitle("HV_{eff}(V)");
-            PartitionCurrentPlot->GetYaxis()->SetTitle("Mean current (µA/cm^{2})");
-            PartitionCurrentPlot->GetXaxis()->SetRangeUser(Data[0][pi].front(),Data[0][pi].back());
-            PartitionCurrentPlot->SetLineColor(p+2);
-            PartitionCurrentPlot->SetMarkerColor(p+2);
-            PartitionCurrentPlot->SetMarkerStyle(p+20);
-
-            TCanvas* cPart = new TCanvas(Canvastitle.c_str());
-            cPart->cd(0);
-            ChamberCurrentsPlot->Draw("ap");
-            cPart->BuildLegend();
-            cPart->Write();
-
-            ChamberCurrentsPlot->Add(PartitionCurrentPlot);
             pi++;
         }
 
@@ -333,7 +339,7 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
         ChamberCurrentsPlot->SetMinimum(0.);
         ChamberCurrentsPlot->SetTitle(MultigraphTitle.c_str());
         ChamberCurrentsPlot->GetXaxis()->SetTitle("HV_{eff}(V)");
-        ChamberCurrentsPlot->GetYaxis()->SetTitle("Mean current (µA/cm^{2})");
+        ChamberCurrentsPlot->GetYaxis()->SetTitle("Mean current (#muA/cm^{2})");
         cMulti->BuildLegend(0.15,0.67,0.45,0.88);
         cMulti->Update();
         string PDF = DQMFolder + cMulti->GetName() + ".pdf";
