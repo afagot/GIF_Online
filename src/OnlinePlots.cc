@@ -240,7 +240,7 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
     Data[4].resize(TotGaps);
     Data[5].resize(TotGaps);
 
-    //Open in reading mode the rate file
+    //Open in reading mode the current file
     ifstream CurrentFile(fName.c_str(), ios::in);
 
     if(CurrentFile){
@@ -248,7 +248,7 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
             //The first column is always the HVstep that
             //is not really useful to us as data. But we
             //will use it to know that we reached the last
-            //line of the rate file. Indeed, each line
+            //line of the cean file. Indeed, each line
             //ending with a newline character, we won't
             //reach the end of the file before trying to
             //read a very last time the HVstep
@@ -259,13 +259,13 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
                 //Then in the rest of the line, we will find
                 //a collection of HVeff, Rates and RatesErr
                 //built like:
-                //HVeff1 Rate11 RateErr11 Rate12 RateErr12 ... HVeff2 ...
+                //HVeff iMon iMonErr iADC iADCErr... for each
                 //This means we first need to read the HVeff
-                //value for 1 rpc then to read all the rates
-                //and errors for each of its partitions.
+                //value for 1 gap then to read all the currents
+                //and errors..
 
                 //Thus, start by looping other the number of
-                //rpcs.
+                //gaps.
                 for(unsigned int p = 0; p < TotGaps; p++){
                     float tmphv = 0;
                     float tmpimon = 0;
@@ -402,6 +402,121 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
         cMultiADC->SaveAs(PDF.c_str());
         cMultiADC->SaveAs(PNG.c_str());
         cMultiADC->Write();
+    }
+
+    fROOT.Close();
+}
+
+// *****************************************************************************************
+
+void MakeDIPPlots(string fName){
+    //A first vector is created for the HVstep. Then,
+    //we need a vector of vectors of vectors... to keep
+    //all the data in a dynamic way. This vector will
+    //contain 2 vector<vector<float>> : 1 for the value
+    //associated to 1 of the DIP parameters and 1 for the
+    //associated error.
+    vector<float>           Steps[2];
+    vector< vector<float> > Data[2];
+    vector<string>          Headers[2];
+
+    for(unsigned int i = 0; i < 2; i++){
+        Steps[i].clear();
+        Data[i].clear();
+        Headers[i].clear();
+    }
+
+    //The header file contains the details of what is saved
+    //in the DIP file. We will be using it for the Graph titles
+    string headerName = fName.substr(0,fName.find_last_of(".")) + "-Header.csv";
+    ifstream HeaderFile(headerName.c_str(),ios::in);
+
+    if(HeaderFile){
+        string firstCol;
+        HeaderFile >> firstCol;
+
+        while(HeaderFile.good()){
+            string parameter = "";
+            string error = "";
+            HeaderFile >> parameter >> error;
+
+            if(parameter != ""){
+                Headers[0].push_back(parameter);
+                Headers[1].push_back(error);
+            }
+        }
+    }
+
+    //Resize Data vector content accordingly to what we have
+    //got from the header
+    Data[0].resize(Headers[0].size());
+    Data[1].resize(Headers[0].size());
+
+    //Open in reading mode the DIP file
+    ifstream DIPFile(fName.c_str(), ios::in);
+
+    if(DIPFile){
+        while(DIPFile.good()){
+            //The first column is always the HVstep.
+            float HVstep = 0.;
+            DIPFile >> HVstep;
+
+            if(HVstep != 0.){
+                Steps[0].push_back(HVstep);
+                Steps[1].push_back(0.);
+
+                //Then in the rest of the line, we will find
+                //a collection of Parameters and their errors.
+
+                //Thus, start by looping other the number of
+                //parameters.
+                for(unsigned int p = 0; p < Headers[0].size(); p++){
+                    float parameter = 0.;
+                    float error = 0.;
+                    DIPFile >> parameter >> error;
+                    Data[0][p].push_back(parameter);
+                    Data[1][p].push_back(error);
+                }
+            }
+        }
+    } else {
+        MSG_ERROR("[Online] DIPfile " + fName + " could not be opened");
+        return;
+    }
+
+    DIPFile.close();
+
+    string DQMFolder = fName.substr(0,fName.find_last_of("/")) + "/Online/DIP/";
+    string mkdirDQMFolder = "mkdir -p " + DQMFolder;
+    system(mkdirDQMFolder.c_str());
+
+    //Now that all the data is contained into our big vector
+    //we will be able to make some plots
+    string fNameROOT = fName.erase(fName.find_last_of(".")) + ".root";
+    TFile fROOT(fNameROOT.c_str(),"RECREATE");
+
+    for(unsigned int r = 0; r < Headers[0].size(); r++){
+        string Graphtitle = Headers[0][r];
+        string Canvastitle = "DIP-" + Headers[0][r];
+
+        TGraphErrors* ParameterPlot = new TGraphErrors(Steps[0].size(),&(Steps[0][0]),&(Data[0][r][0]),&(Steps[1][0]),&(Data[1][r][0]));
+        ParameterPlot->SetTitle(Graphtitle.c_str());
+        ParameterPlot->GetXaxis()->SetTitle("HV step");
+        ParameterPlot->GetYaxis()->SetTitle("");
+        ParameterPlot->GetXaxis()->SetRangeUser(Steps[0].front(),Steps[0].back());
+        ParameterPlot->SetLineColor(2);
+        ParameterPlot->SetMarkerColor(2);
+        ParameterPlot->SetMarkerStyle(20);
+
+        TCanvas* cParam = new TCanvas(Canvastitle.c_str());
+        cParam->cd(0);
+        ParameterPlot->Draw("ap");
+        cParam->BuildLegend();
+        string PDF = DQMFolder + cParam->GetName() + ".pdf";
+        string PNG = DQMFolder + cParam->GetName() + ".png";
+        cParam->SaveAs(PDF.c_str());
+        cParam->SaveAs(PNG.c_str());
+        cParam->Write();
     }
 
     fROOT.Close();

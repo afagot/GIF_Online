@@ -14,12 +14,12 @@ int main(int argc ,char *argv[]){
     converter >> program;
     converter.clear();
 
-    if(argc != 2 && argc != 3){
-        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis /path/to/Offline-Rates.csv /path/to/Offline-Currents.csv");
+    if(argc != 3 && argc != 4){
+        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis /path/to/Offline-Rates.csv /path/to/Offline-Currents.csv /path/to/Offline-DIP.csv");
         MSG_WARNING("or");
-        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis /path/to/Offline-Currents.csv");
+        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis /path/to/Offline-Currents.csv /path/to/Offline-DIP.csv");
         return -1;
-    } else if (argc == 2){
+    } else if (argc == 3){
         MSG_WARNING("[OnlinePlots] Update online plots");
 
         //First construct the GIF++ infrastructure with its
@@ -38,8 +38,15 @@ int main(int argc ,char *argv[]){
         converter.clear();
 
         MakeCurrentPlots(GIF,currentName);
+
+        converter << argv[2];
+        string dipName;
+        converter >> dipName;
+        converter.clear();
+
+        MakeDIPPlots(dipName);
         return 0;
-    } else if (argc == 3){
+    } else if (argc == 4){
         MSG_WARNING("[OnlinePlots] Update online plots");
 
         //First construct the GIF++ infrastructure with its
@@ -65,6 +72,13 @@ int main(int argc ,char *argv[]){
         converter.clear();
 
         MakeCurrentPlots(GIF,currentName);
+
+        converter << argv[3];
+        string dipName;
+        converter >> dipName;
+        converter.clear();
+
+        MakeDIPPlots(dipName);
         return 0;
     }
 }
