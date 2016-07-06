@@ -25,6 +25,7 @@ const string __dimensions = "Dimensions/Dimensions_20160526-2016XXXX.ini";
 //const string __dimensions = "Dimensions/Dimensions_20150928-20160512.ini";
 const string __logpath = "/var/operation/RUN/log";
 //const string __logpath = "log";
+const string __dipinfo = "/var/operation/RUN/DIP_PUBLICATIONS";
 
 //***************************** USEFUL FUNCTIONS
 
@@ -34,6 +35,7 @@ string  intTostring(int value);
 string  longTostring(long value);
 string  floatTostring(float value);
 string  GetLogTimeStamp();
+void    getDIPParamUnit(string paramID, string &paramUnit) ;
 
 //***************************** STRUCTURES FOR GIF INFRASTRUCTURE
 

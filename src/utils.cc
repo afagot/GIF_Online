@@ -89,6 +89,29 @@ string GetLogTimeStamp(){
 
 // ****************************************************************************************************
 
+void getDIPParamUnit(string paramID, string &paramUnit) {
+
+    // Find DIP ID in the list of DIP subscriptions
+    string str, tmp;
+    ifstream inp;
+    inp.open(__dipinfo.c_str());
+
+    while(getline(inp, str)) {
+        stringstream ss(str);
+        if(str.find("DIP_"+paramID) != string::npos) break;
+    }
+
+    // Split string based on tabulations
+    istringstream iss(str);
+    unsigned int i=0;
+
+    while(std::getline(iss, tmp, '\t')) {
+        if(i==2) paramUnit = tmp;
+        i++;
+    }
+}
+
+// ****************************************************************************************************
 
 //Functions to set up the structures needed to define the GIF++ infrastructure
 void SetRPC(RPC &rpc, string ID, IniFile *geofile){

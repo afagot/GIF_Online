@@ -499,10 +499,18 @@ void MakeDIPPlots(string fName){
         string Graphtitle = Headers[0][r];
         string Canvastitle = "DIP-" + Headers[0][r];
 
+        //Get the unit for this parameter in the DIP_PUBLICATIONS file
+        string ParameterID = "DIP_" + Headers[0][r];
+        string ParameterUnit;
+        getDIPParamUnit(ParameterID,ParameterUnit);
+
+        string xAxisTitle = "HV step";
+        string yAxisTitle = "(" + ParameterUnit + ")";
+
         TGraphErrors* ParameterPlot = new TGraphErrors(Steps[0].size(),&(Steps[0][0]),&(Data[0][r][0]),&(Steps[1][0]),&(Data[1][r][0]));
         ParameterPlot->SetTitle(Graphtitle.c_str());
-        ParameterPlot->GetXaxis()->SetTitle("HV step");
-        ParameterPlot->GetYaxis()->SetTitle("");
+        ParameterPlot->GetXaxis()->SetTitle(xAxisTitle.c_str());
+        ParameterPlot->GetYaxis()->SetTitle(yAxisTitle.c_str());
         ParameterPlot->GetXaxis()->SetRangeUser(Steps[0].front(),Steps[0].back());
         ParameterPlot->SetLineColor(2);
         ParameterPlot->SetMarkerColor(2);
