@@ -25,6 +25,8 @@ const string __dimensions = "Dimensions/Dimensions_20160526-2016XXXX.ini";
 //const string __dimensions = "Dimensions/Dimensions_20150928-20160512.ini";
 const string __logpath = "/var/operation/RUN/log";
 //const string __logpath = "log";
+const string __lastpath = "/var/operation/RUN/last";
+//const string __lastpath = "001329/last";
 const string __dipinfo = "/var/operation/RUN/DIP_PUBLICATIONS";
 
 //***************************** USEFUL FUNCTIONS
@@ -35,6 +37,7 @@ string  intTostring(int value);
 string  longTostring(long value);
 string  floatTostring(float value);
 string  GetLogTimeStamp();
+bool    IsReRunning(string fName);
 void    getDIPParamUnit(string paramID, string &paramUnit) ;
 
 //***************************** STRUCTURES FOR GIF INFRASTRUCTURE

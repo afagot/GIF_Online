@@ -120,7 +120,7 @@ void MakeRatePlots(Infrastructure Infra, string fName){
 
             }
         }
-    } else {
+    } else if(!IsReRunning(fName)){
         MSG_ERROR("[Online] Ratefile " + fName + " could not be opened");
         return;
     }
@@ -282,7 +282,7 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
                 }
             }
         }
-    } else {
+    } else if(!IsReRunning(fName)){
         MSG_ERROR("[Online] Currentfile " + fName + " could not be opened");
         return;
     }
@@ -479,7 +479,7 @@ void MakeDIPPlots(string fName){
                 }
             }
         }
-    } else {
+    } else if(!IsReRunning(fName)){
         MSG_ERROR("[Online] DIPfile " + fName + " could not be opened");
         return;
     }
@@ -500,12 +500,11 @@ void MakeDIPPlots(string fName){
         string Canvastitle = "DIP-" + Headers[0][r];
 
         //Get the unit for this parameter in the DIP_PUBLICATIONS file
-        string ParameterID = "DIP_" + Headers[0][r];
         string ParameterUnit;
-        getDIPParamUnit(ParameterID,ParameterUnit);
+        getDIPParamUnit(Graphtitle,ParameterUnit);
 
         string xAxisTitle = "HV step";
-        string yAxisTitle = "(" + ParameterUnit + ")";
+        string yAxisTitle = Graphtitle + "(" + ParameterUnit + ")";
 
         TGraphErrors* ParameterPlot = new TGraphErrors(Steps[0].size(),&(Steps[0][0]),&(Data[0][r][0]),&(Steps[1][0]),&(Data[1][r][0]));
         ParameterPlot->SetTitle(Graphtitle.c_str());
