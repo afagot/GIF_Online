@@ -120,8 +120,8 @@ void MakeRatePlots(Infrastructure Infra, string fName){
 
             }
         }
-    } else if(!IsReRunning(fName)){
-        MSG_ERROR("[Online] Ratefile " + fName + " could not be opened");
+    } else {
+        if(!IsReRunning()) MSG_ERROR("[Online] Ratefile " + fName + " could not be opened");
         return;
     }
 
@@ -282,8 +282,8 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
                 }
             }
         }
-    } else if(!IsReRunning(fName)){
-        MSG_ERROR("[Online] Currentfile " + fName + " could not be opened");
+    } else {
+        if(!IsReRunning()) MSG_ERROR("[Online] Currentfile " + fName + " could not be opened");
         return;
     }
 
@@ -479,8 +479,8 @@ void MakeDIPPlots(string fName){
                 }
             }
         }
-    } else if(!IsReRunning(fName)){
-        MSG_ERROR("[Online] DIPfile " + fName + " could not be opened");
+    } else {
+        if(!IsReRunning()) MSG_ERROR("[Online] DIPfile " + fName + " could not be opened");
         return;
     }
 
@@ -504,7 +504,10 @@ void MakeDIPPlots(string fName){
         getDIPParamUnit(Graphtitle,ParameterUnit);
 
         string xAxisTitle = "HV step";
-        string yAxisTitle = Graphtitle + "(" + ParameterUnit + ")";
+        string yAxisTitle;
+
+        if(ParameterUnit != "/") yAxisTitle = Graphtitle + "(" + ParameterUnit + ")";
+        else yAxisTitle = Graphtitle;
 
         TGraphErrors* ParameterPlot = new TGraphErrors(Steps[0].size(),&(Steps[0][0]),&(Data[0][r][0]),&(Steps[1][0]),&(Data[1][r][0]));
         ParameterPlot->SetTitle(Graphtitle.c_str());

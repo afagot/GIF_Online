@@ -18,6 +18,7 @@ int main(int argc ,char *argv[]){
         MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis /path/to/Offline-Rates.csv /path/to/Offline-Currents.csv /path/to/Offline-DIP.csv");
         MSG_WARNING("or if there is no rate file");
         MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis /path/to/Offline-Currents.csv /path/to/Offline-DIP.csv");
+
         return -1;
     } else if (argc == 3){
         //First construct the GIF++ infrastructure with its
@@ -40,7 +41,7 @@ int main(int argc ,char *argv[]){
         converter >> dipName;
         converter.clear();
 
-        if(!IsReRunning(currentName)) MSG_WARNING("[OnlinePlots] Update online plots");
+        if(!IsReRunning()) MSG_WARNING("[OnlinePlots] Update online plots");
 
         MakeCurrentPlots(GIF,currentName);
         MakeDIPPlots(dipName);
@@ -72,7 +73,7 @@ int main(int argc ,char *argv[]){
         converter >> dipName;
         converter.clear();
 
-        if(!IsReRunning(currentName)) MSG_WARNING("[OnlinePlots] Update online plots");
+        if(!IsReRunning()) MSG_WARNING("[OnlinePlots] Update online plots");
 
         MakeRatePlots(GIF,rateName);
         MakeCurrentPlots(GIF,currentName);
