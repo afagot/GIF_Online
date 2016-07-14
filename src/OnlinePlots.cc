@@ -521,7 +521,6 @@ void MakeDIPPlots(string fName){
         TCanvas* cParam = new TCanvas(Canvastitle.c_str());
         cParam->cd(0);
         ParameterPlot->Draw("ap");
-        cParam->BuildLegend();
         string PDF = DQMFolder + cParam->GetName() + ".pdf";
         string PNG = DQMFolder + cParam->GetName() + ".png";
         cParam->SaveAs(PDF.c_str());
