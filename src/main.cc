@@ -41,7 +41,7 @@ int main(int argc ,char *argv[]){
         converter >> dipName;
         converter.clear();
 
-        if(!IsReRunning()) MSG_WARNING("[OnlinePlots] Update online plots");
+        if(!IsReRunning(dipName)) MSG_WARNING("[OnlinePlots] Update online plots");
 
         MakeCurrentPlots(GIF,currentName);
         MakeDIPPlots(dipName);
@@ -73,7 +73,7 @@ int main(int argc ,char *argv[]){
         converter >> dipName;
         converter.clear();
 
-        if(!IsReRunning()) MSG_WARNING("[OnlinePlots] Update online plots");
+        if(!IsReRunning(dipName)) MSG_WARNING("[OnlinePlots] Update online plots");
 
         MakeRatePlots(GIF,rateName);
         MakeCurrentPlots(GIF,currentName);
