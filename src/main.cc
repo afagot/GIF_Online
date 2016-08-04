@@ -14,13 +14,12 @@ int main(int argc ,char *argv[]){
     converter >> program;
     converter.clear();
 
-    if(argc != 3 && argc != 4){
-        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis /path/to/Offline-Rates.csv /path/to/Offline-Currents.csv /path/to/Offline-DIP.csv");
-        MSG_WARNING("or if there is no rate file");
-        MSG_WARNING("[OnlinePlots]: USAGE is : bin/onlineanalysis /path/to/Offline-Currents.csv /path/to/Offline-DIP.csv");
+    if(argc != 2){
+        MSG_WARNING("[Online] expects to have 2 parameters");
+        MSG_WARNING("[Online] USAGE is : " + program + " /path/to/Offline/files");
 
         return -1;
-    } else if (argc == 3){
+    } else if (argc == 2){
         //First construct the GIF++ infrastructure with its
         //trolleys and RPCs
 
@@ -31,53 +30,21 @@ int main(int argc ,char *argv[]){
         Infrastructure GIF;
         SetInfrastructure(GIF,Dimensions);
 
-        converter << argv[1];
-        string currentName;
-        converter >> currentName;
-        converter.clear();
-
-        converter << argv[2];
-        string dipName;
-        converter >> dipName;
-        converter.clear();
-
-        if(!IsReRunning(dipName)) MSG_WARNING("[OnlinePlots] Update online plots");
-
-        MakeCurrentPlots(GIF,currentName);
-        MakeDIPPlots(dipName);
-
-        return 0;
-    } else if (argc == 4){
-        //First construct the GIF++ infrastructure with its
-        //trolleys and RPCs
-
-        //Get the chambers geometry
-        IniFile* Dimensions = new IniFile(__dimensions.c_str());
-        Dimensions->Read();
-
-        Infrastructure GIF;
-        SetInfrastructure(GIF,Dimensions);
+        string path;
 
         converter << argv[1];
-        string rateName;
-        converter >> rateName;
+        converter >> path;
         converter.clear();
 
-        converter << argv[2];
-        string currentName;
-        converter >> currentName;
-        converter.clear();
+        string rateName     = path + "/Offline-Rate.csv";
+        string currentName  = path + "/Offline-Current.csv";
+        string dipName      = path + "/Offline-DIP.csv";
 
-        converter << argv[3];
-        string dipName;
-        converter >> dipName;
-        converter.clear();
+        if(existFile(rateName)) MakeRatePlots(GIF,rateName);
+        if(existFile(currentName)) MakeCurrentPlots(GIF,currentName);
+        if(existFile(dipName)) MakeDIPPlots(dipName);
 
-        if(!IsReRunning(dipName)) MSG_WARNING("[OnlinePlots] Update online plots");
-
-        MakeRatePlots(GIF,rateName);
-        MakeCurrentPlots(GIF,currentName);
-        MakeDIPPlots(dipName);
+        MSG_WARNING("[Online] Online plots updated");
 
         return 0;
     }

@@ -2,6 +2,13 @@
 
 using namespace std;
 
+bool existFile(string filename){
+    ifstream file(filename.c_str());
+    return file.good();
+}
+
+// ****************************************************************************************************
+
 int CharToInt(char &C){
     stringstream ss;
     ss << C;
@@ -85,33 +92,6 @@ string GetLogTimeStamp(){
     stream.clear();
 
     return Date;
-}
-
-// ****************************************************************************************************
-
-bool IsReRunning(string fName){
-    //First get the information from the «last» file in the RUN
-    //diretory. We will need to compare the ScanID of the file that
-    //is being analysed and of the last file that have been taken.
-    ifstream last(__lastpath.c_str(), ios::in);
-
-    string lastfName;
-    last >> lastfName;
-
-    //Get the Scan number from the file name
-    size_t pos = 0;
-    string scan = "Scan";
-    pos = lastfName.find(scan);
-    string lastScanID = lastfName.substr(pos+scan.length(),lastfName.find_first_of("_")-(pos+scan.length()));
-
-    //Now we get the same information from the analysed file name
-    string currentScanID = fName.substr(0,fName.find_first_of("/"));
-
-    //return the comparison
-    //if one of the 2 parameters is not the same, this means that we
-    //are not analysing the last run but rerunning the analysis on old
-    //files
-    return (lastScanID != currentScanID);
 }
 
 // ****************************************************************************************************

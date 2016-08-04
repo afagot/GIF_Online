@@ -121,7 +121,7 @@ void MakeRatePlots(Infrastructure Infra, string fName){
             }
         }
     } else {
-        if(!IsReRunning(fName)) MSG_ERROR("[Online] Ratefile " + fName + " could not be opened");
+        MSG_ERROR("[Online] Ratefile " + fName + " could not be opened");
         return;
     }
 
@@ -283,7 +283,7 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
             }
         }
     } else {
-        if(!IsReRunning(fName)) MSG_ERROR("[Online] Currentfile " + fName + " could not be opened");
+        MSG_ERROR("[Online] Currentfile " + fName + " could not be opened");
         return;
     }
 
@@ -480,7 +480,7 @@ void MakeDIPPlots(string fName){
             }
         }
     } else {
-        if(!IsReRunning(fName)) MSG_ERROR("[Online] DIPfile " + fName + " could not be opened");
+        MSG_ERROR("[Online] DIPfile " + fName + " could not be opened");
         return;
     }
 

@@ -30,13 +30,13 @@ const string __dipinfo = "/var/operation/RUN/DIP_PUBLICATIONS";
 
 //***************************** USEFUL FUNCTIONS
 
+bool    existFile(string filename);
 int     CharToInt(char& C);
 string  CharToString(char& C);
 string  intTostring(int value);
 string  longTostring(long value);
 string  floatTostring(float value);
 string  GetLogTimeStamp();
-bool    IsReRunning(string fName);
 void    getDIPParamUnit(string paramID, string &paramUnit) ;
 
 //***************************** STRUCTURES FOR GIF INFRASTRUCTURE
