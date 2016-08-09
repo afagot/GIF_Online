@@ -20,6 +20,19 @@ int main(int argc ,char *argv[]){
 
         return -1;
     } else if (argc == 2){
+        converter << argv[1];
+        string pathName;
+        converter >> pathName;
+        converter.clear();
+
+        //Write in the log file of the RUN directory the path to the log file
+        //in the HVSCAN directory to know where to write the logs.
+        string logpath = pathName + "/log";
+
+        ofstream logpathfile(__logpath.c_str(), ios::out);
+        logpathfile << logpath;
+        logpathfile.close();
+
         //First construct the GIF++ infrastructure with its
         //trolleys and RPCs
 
