@@ -27,7 +27,7 @@ int main(int argc ,char *argv[]){
 
         //Write in the log file of the RUN directory the path to the log file
         //in the HVSCAN directory to know where to write the logs.
-        string logpath = pathName + "/log";
+        string logpath = pathName + "/log.txt";
 
         ofstream logpathfile(__logpath.c_str(), ios::out);
         logpathfile << logpath;
