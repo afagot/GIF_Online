@@ -21,11 +21,15 @@ using namespace std;
 
 //***************************** ENV. VARIABLES
 
-const string __dimensions = "Dimensions/Dimensions_20160526-2016XXXX.ini";
+const string __dimensions = "Dimensions/Dimensions_20160831-2016XXXX.ini";
+//const string __dimensions = "Dimensions/Dimensions_20160526-2016XXXX.ini";
 //const string __dimensions = "Dimensions/Dimensions_20150928-20160512.ini";
+
 const string __lastpath = "/var/operation/RUN/last";
+
 const string __logpath = "/var/operation/RUN/log-online";
 //const string __logpath = "log";
+
 const string __dipinfo = "/var/operation/RUN/DIP_PUBLICATIONS";
 
 //***************************** USEFUL FUNCTIONS
