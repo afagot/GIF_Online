@@ -39,7 +39,7 @@ void MakeRatePlots(Infrastructure Infra, string fName){
     //To be able to read the file in a dynamical way, we
     //also need to exactly know the number of RPCs and of
     //partitions
-    unsigned int TotRPCs = 0;
+    unsigned int TotRPCs = Infra.nSlots;
     unsigned int TotPartitions = 0;
     vector<unsigned int> RPCPartitions;
     RPCPartitions.clear();
@@ -48,14 +48,10 @@ void MakeRatePlots(Infrastructure Infra, string fName){
     vector<string> RPCNames;
     RPCNames.clear();
 
-    for(unsigned int t = 0; t < Infra.nTrolleys; t++){
-        TotRPCs += Infra.Trolleys[t].nSlots;
-
-        for(unsigned int s = 0; s < Infra.Trolleys[t].nSlots; s++){
-            TotPartitions += Infra.Trolleys[t].RPCs[s].nPartitions;
-            RPCPartitions.push_back(Infra.Trolleys[t].RPCs[s].nPartitions);
-            RPCNames.push_back(Infra.Trolleys[t].RPCs[s].name);
-        }
+    for(unsigned int s = 0; s < Infra.nSlots; s++){
+        TotPartitions += Infra.RPCs[s].nPartitions;
+        RPCPartitions.push_back(Infra.RPCs[s].nPartitions);
+        RPCNames.push_back(Infra.RPCs[s].name);
     }
 
     //Resize Data vector content accordingly what we have
@@ -206,7 +202,7 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
     //To be able to read the file in a dynamical way, we
     //also need to exactly know the number of RPCs and of
     //partitions
-    unsigned int TotRPCs = 0;
+    unsigned int TotRPCs = Infra.nSlots;
     unsigned int TotGaps = 0;
     vector<unsigned int> RPCGaps;
     RPCGaps.clear();
@@ -218,17 +214,13 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
     vector<string> GapNames;
     GapNames.clear();
 
-    for(unsigned int t = 0; t < Infra.nTrolleys; t++){
-        TotRPCs += Infra.Trolleys[t].nSlots;
+    for(unsigned int s = 0; s < Infra.nSlots; s++){
+        TotGaps += Infra.RPCs[s].nGaps;
+        RPCGaps.push_back(Infra.RPCs[s].nGaps);
+        RPCNames.push_back(Infra.RPCs[s].name);
 
-        for(unsigned int s = 0; s < Infra.Trolleys[t].nSlots; s++){
-            TotGaps += Infra.Trolleys[t].RPCs[s].nGaps;
-            RPCGaps.push_back(Infra.Trolleys[t].RPCs[s].nGaps);
-            RPCNames.push_back(Infra.Trolleys[t].RPCs[s].name);
-
-            vector<string>::iterator it = GapNames.end();
-            GapNames.insert(it,Infra.Trolleys[t].RPCs[s].gapNames.begin(),Infra.Trolleys[t].RPCs[s].gapNames.end());
-        }
+        vector<string>::iterator it = GapNames.end();
+        GapNames.insert(it,Infra.RPCs[s].gapNames.begin(),Infra.RPCs[s].gapNames.end());
     }
 
     //Resize Data vector content accordingly what we have

@@ -141,33 +141,16 @@ void SetRPC(RPC &rpc, string ID, IniFile *geofile){
 // ****************************************************************************************************
 
 
-void SetTrolley(GIFTrolley &trolley, string ID, IniFile *geofile){
-    trolley.nSlots = geofile->intType(ID,"nSlots",NSLOTS);
-    trolley.SlotsID = geofile->stringType(ID,"SlotsID","");
+void SetInfrastructure(Infrastructure &infra, IniFile *geofile){
+    infra.nSlots = geofile->intType("General","nSlots",NSLOTS);
+    infra.SlotsID = geofile->stringType("General","SlotsID","");
 
-    for(unsigned int s = 0; s < trolley.nSlots; s++){
-        string rpcID = ID + "S" + CharToString(trolley.SlotsID[s]);
+    for(unsigned int s = 0; s < infra.nSlots; s++){
+        string rpcID = "S" + CharToString(infra.SlotsID[s]);
 
         RPC temprpc;
         SetRPC(temprpc,rpcID,geofile);
-        trolley.RPCs.push_back(temprpc);
-    }
-}
-
-// ****************************************************************************************************
-
-
-void SetInfrastructure(Infrastructure &infra, IniFile *geofile){
-    infra.nTrolleys = geofile->intType("General","nTrolleys",NTROLLEYS);
-    infra.TrolleysID = geofile->stringType("General","TrolleysID","");
-    infra.Trolleys.clear();
-
-    for(unsigned int t = 0; t < infra.nTrolleys; t++){
-        string trolleyID = "T" + CharToString(infra.TrolleysID[t]);
-
-        GIFTrolley tempTrolley;
-        SetTrolley(tempTrolley, trolleyID, geofile);
-        infra.Trolleys.push_back(tempTrolley);
+        infra.RPCs.push_back(temprpc);
     }
 }
 

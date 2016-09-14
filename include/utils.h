@@ -13,26 +13,17 @@
 
 #include "IniFile.h"
 
-#define NTROLLEYS      5
-#define NSLOTS         4
+#define NSLOTS         8
 #define NPARTITIONS    4
 
 using namespace std;
 
 //***************************** ENV. VARIABLES
 
-const string __dimensions = "Dimensions/Dimensions_20160910-XXXXXXXX.ini";
-//const string __dimensions = "Dimensions/Dimensions_20160907-20160910.ini";
-//const string __dimensions = "Dimensions/Dimensions_20160831-20160907.ini";
-//const string __dimensions = "Dimensions/Dimensions_20160526-2016XXXX.ini";
-//const string __dimensions = "Dimensions/Dimensions_20150928-20160512.ini";
-
-const string __lastpath = "/var/operation/RUN/last";
-
-const string __logpath = "/var/operation/RUN/log-online";
-//const string __logpath = "log";
-
-const string __dipinfo = "/var/operation/RUN/DIP_PUBLICATIONS";
+const string __dimensions = "Dimensions/Dimensions.ini";
+const string __lastpath   = "/var/operation/RUN/last";
+const string __logpath    = "/var/operation/RUN/log-online";
+const string __dipinfo    = "/var/operation/RUN/DIP_PUBLICATIONS";
 
 //***************************** USEFUL FUNCTIONS
 
@@ -57,18 +48,10 @@ struct RPC{
 
 void SetRPC(RPC& rpc, string ID, IniFile* geofile);
 
-struct GIFTrolley {
+struct Infrastructure {
     unsigned int nSlots;
     string       SlotsID;
     vector<RPC>  RPCs;
-};
-
-void SetTrolley(GIFTrolley& trolley, string ID, IniFile* geofile);
-
-struct Infrastructure {
-    unsigned int       nTrolleys;
-    string             TrolleysID;
-    vector<GIFTrolley> Trolleys;
 };
 
 void SetInfrastructure(Infrastructure& infra, IniFile* geofile);
