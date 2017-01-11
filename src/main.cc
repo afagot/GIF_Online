@@ -37,7 +37,8 @@ int main(int argc ,char *argv[]){
         //trolleys and RPCs
 
         //Get the chambers geometry
-        IniFile* Dimensions = new IniFile(__dimensions.c_str());
+        string dimpath = pathName + "/Dimensions.ini";
+        IniFile* Dimensions = new IniFile(dimpath.c_str());
         Dimensions->Read();
 
         Infrastructure GIF;
