@@ -10,6 +10,17 @@
 #include <vector>
 #include <unistd.h>
 #include <iomanip>
+#include <iomanip>
+#include <algorithm>
+#include "TMath.h"
+#include "TFile.h"
+#include "TStyle.h"
+#include "TGraphErrors.h"
+#include "TGraphPainter.h"
+#include "TMultiGraph.h"
+#include "TCanvas.h"
+#include "TAxis.h"
+#include "TLegend.h"
 
 #include "IniFile.h"
 
@@ -20,10 +31,8 @@ using namespace std;
 
 //***************************** ENV. VARIABLES
 
-const string __dimensions = "Dimensions/Dimensions.ini";
-const string __lastpath   = "/var/operation/RUN/last";
-const string __logpath    = "/var/operation/RUN/log-online";
-const string __dipinfo    = "/var/operation/RUN/DIP_PUBLICATIONS";
+const string __logpath = "/var/operation/RUN/log-online";
+const string __dipinfo = "/var/operation/RUN/DIP_PUBLICATIONS";
 
 //***************************** USEFUL FUNCTIONS
 

@@ -37,7 +37,8 @@ int main(int argc ,char *argv[]){
         //trolleys and RPCs
 
         //Get the chambers geometry
-        IniFile* Dimensions = new IniFile(__dimensions.c_str());
+        string dimpath = pathName + "/Dimensions.ini";
+        IniFile* Dimensions = new IniFile(dimpath.c_str());
         Dimensions->Read();
 
         Infrastructure GIF;
@@ -51,11 +52,9 @@ int main(int argc ,char *argv[]){
 
         string rateName     = path + "/Offline-Rate.csv";
         string currentName  = path + "/Offline-Current.csv";
-        string dipName      = path + "/Offline-DIP.csv";
 
         if(existFile(rateName)) MakeRatePlots(GIF,rateName);
         if(existFile(currentName)) MakeCurrentPlots(GIF,currentName);
-        if(existFile(dipName)) MakeDIPPlots(dipName);
 
         MSG_WARNING("[Online] Online plots updated");
 

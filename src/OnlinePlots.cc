@@ -3,24 +3,6 @@
 #include "../include/utils.h"
 #include "../include/OnlinePlots.h"
 
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <algorithm>
-#include <map>
-#include "TMath.h"
-#include "TFile.h"
-#include "TStyle.h"
-#include "TGraphErrors.h"
-#include "TGraphPainter.h"
-#include "TMultiGraph.h"
-#include "TCanvas.h"
-#include "TAxis.h"
-#include "TLegend.h"
-
 using namespace std;
 
 void MakeRatePlots(Infrastructure Infra, string fName){
@@ -117,7 +99,7 @@ void MakeRatePlots(Infrastructure Infra, string fName){
             }
         }
     } else {
-        MSG_ERROR("[Online] Ratefile " + fName + " could not be opened");
+        MSG_ERROR("[Online-Rate] File " + fName + " could not be opened");
         return;
     }
 
@@ -275,7 +257,7 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
             }
         }
     } else {
-        MSG_ERROR("[Online] Currentfile " + fName + " could not be opened");
+        MSG_ERROR("[Online-Current] File " + fName + " could not be opened");
         return;
     }
 
@@ -394,130 +376,6 @@ void MakeCurrentPlots(Infrastructure Infra, string fName){
         cMultiADC->SaveAs(PDF.c_str());
         cMultiADC->SaveAs(PNG.c_str());
         cMultiADC->Write();
-    }
-
-    fROOT.Close();
-}
-
-// *****************************************************************************************
-
-void MakeDIPPlots(string fName){
-    //A first vector is created for the HVstep. Then,
-    //we need a vector of vectors of vectors... to keep
-    //all the data in a dynamic way. This vector will
-    //contain 2 vector<vector<float>> : 1 for the value
-    //associated to 1 of the DIP parameters and 1 for the
-    //associated error.
-    vector<float>           Steps[2];
-    vector< vector<float> > Data[2];
-    vector<string>          Headers[2];
-
-    for(unsigned int i = 0; i < 2; i++){
-        Steps[i].clear();
-        Data[i].clear();
-        Headers[i].clear();
-    }
-
-    //The header file contains the details of what is saved
-    //in the DIP file. We will be using it for the Graph titles
-    string headerName = fName.substr(0,fName.find_last_of(".")) + "-Header.csv";
-    ifstream HeaderFile(headerName.c_str(),ios::in);
-
-    if(HeaderFile){
-        string firstCol;
-        HeaderFile >> firstCol;
-
-        while(HeaderFile.good()){
-            string parameter = "";
-            string error = "";
-            HeaderFile >> parameter >> error;
-
-            if(parameter != ""){
-                Headers[0].push_back(parameter);
-                Headers[1].push_back(error);
-            }
-        }
-    }
-
-    //Resize Data vector content accordingly to what we have
-    //got from the header
-    Data[0].resize(Headers[0].size());
-    Data[1].resize(Headers[0].size());
-
-    //Open in reading mode the DIP file
-    ifstream DIPFile(fName.c_str(), ios::in);
-
-    if(DIPFile){
-        while(DIPFile.good()){
-            //The first column is always the HVstep.
-            float HVstep = 0.;
-            DIPFile >> HVstep;
-
-            if(HVstep != 0.){
-                Steps[0].push_back(HVstep);
-                Steps[1].push_back(0.);
-
-                //Then in the rest of the line, we will find
-                //a collection of Parameters and their errors.
-
-                //Thus, start by looping other the number of
-                //parameters.
-                for(unsigned int p = 0; p < Headers[0].size(); p++){
-                    float parameter = 0.;
-                    float error = 0.;
-                    DIPFile >> parameter >> error;
-                    Data[0][p].push_back(parameter);
-                    Data[1][p].push_back(error);
-                }
-            }
-        }
-    } else {
-        MSG_ERROR("[Online] DIPfile " + fName + " could not be opened");
-        return;
-    }
-
-    DIPFile.close();
-
-    string DQMFolder = fName.substr(0,fName.find_last_of("/")) + "/Online/DIP/";
-    string mkdirDQMFolder = "mkdir -p " + DQMFolder;
-    system(mkdirDQMFolder.c_str());
-
-    //Now that all the data is contained into our big vector
-    //we will be able to make some plots
-    string fNameROOT = fName.erase(fName.find_last_of(".")) + ".root";
-    TFile fROOT(fNameROOT.c_str(),"RECREATE");
-
-    for(unsigned int r = 0; r < Headers[0].size(); r++){
-        string Graphtitle = Headers[0][r];
-        string Canvastitle = "DIP-" + Headers[0][r];
-
-        //Get the unit for this parameter in the DIP_PUBLICATIONS file
-        string ParameterUnit;
-        getDIPParamUnit(Graphtitle,ParameterUnit);
-
-        string xAxisTitle = "HV step";
-        string yAxisTitle;
-
-        if(ParameterUnit != "/") yAxisTitle = Graphtitle + "(" + ParameterUnit + ")";
-        else yAxisTitle = Graphtitle;
-
-        TGraphErrors* ParameterPlot = new TGraphErrors(Steps[0].size(),&(Steps[0][0]),&(Data[0][r][0]),&(Steps[1][0]),&(Data[1][r][0]));
-        ParameterPlot->SetTitle(Graphtitle.c_str());
-        ParameterPlot->GetXaxis()->SetTitle(xAxisTitle.c_str());
-        ParameterPlot->GetYaxis()->SetTitle(yAxisTitle.c_str());
-        ParameterPlot->GetXaxis()->SetRangeUser(Steps[0].front(),Steps[0].back());
-        ParameterPlot->SetLineColor(2);
-        ParameterPlot->SetMarkerColor(2);
-        ParameterPlot->SetMarkerStyle(20);
-
-        TCanvas* cParam = new TCanvas(Canvastitle.c_str());
-        cParam->cd(0);
-        ParameterPlot->Draw("ap");
-        string PDF = DQMFolder + cParam->GetName() + ".pdf";
-        string PNG = DQMFolder + cParam->GetName() + ".png";
-        cParam->SaveAs(PDF.c_str());
-        cParam->SaveAs(PNG.c_str());
-        cParam->Write();
     }
 
     fROOT.Close();
