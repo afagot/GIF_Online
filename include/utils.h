@@ -10,6 +10,17 @@
 #include <vector>
 #include <unistd.h>
 #include <iomanip>
+#include <iomanip>
+#include <algorithm>
+#include "TMath.h"
+#include "TFile.h"
+#include "TStyle.h"
+#include "TGraphErrors.h"
+#include "TGraphPainter.h"
+#include "TMultiGraph.h"
+#include "TCanvas.h"
+#include "TAxis.h"
+#include "TLegend.h"
 
 #include "IniFile.h"
 

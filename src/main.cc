@@ -52,11 +52,9 @@ int main(int argc ,char *argv[]){
 
         string rateName     = path + "/Offline-Rate.csv";
         string currentName  = path + "/Offline-Current.csv";
-        string dipName      = path + "/Offline-DIP.csv";
 
         if(existFile(rateName)) MakeRatePlots(GIF,rateName);
         if(existFile(currentName)) MakeCurrentPlots(GIF,currentName);
-        if(existFile(dipName)) MakeDIPPlots(dipName);
 
         MSG_WARNING("[Online] Online plots updated");
 
